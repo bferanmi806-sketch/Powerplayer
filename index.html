@@ -1,32 +1,625 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>SibolAni</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SibolAni | Resilient Harvests for Ilocos</title>
+    <!-- Google Fonts: Inter for clean UI, Playfair for warm headings -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; }
-        .header { background-color: #4CAF50; padding: 15px; color: white; text-align: center; }
-        .content { padding: 20px; } 
-        .footer { background-color: #4CAF50; padding: 10px; color: white; text-align: center; position: fixed; bottom: 0; width: 100%; }
+        :root {
+            --sage-green: #7D9D85;
+            --deep-forest: #3E5641;
+            --soft-beige: #F9F7F2;
+            --off-white: #FFFFFF;
+            --accent-blue: #A8C2D1;
+            --text-dark: #2C332E;
+            --text-light: #5A635C;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--soft-beige);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--deep-forest);
+        }
+
+        /* --- Layout Containers --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            padding: 80px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--deep-forest);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--sage-green);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(rgba(249, 247, 242, 0.8), rgba(249, 247, 242, 0.8)), 
+                        url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2070') center/cover;
+            padding-top: 80px;
+            opacity: 1;
+            transform: none;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--sage-green);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: var(--sage-green);
+            color: white;
+            box-shadow: 0 4px 15px rgba(125, 157, 133, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--deep-forest);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid var(--sage-green);
+            color: var(--sage-green);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--sage-green);
+            color: white;
+        }
+
+        /* --- Sections Stylings --- */
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* --- Problem Grid --- */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--off-white);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--soft-beige);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--sage-green);
+        }
+
+        /* --- Solution Step Flow --- */
+        .solution-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .step-card {
+            text-align: center;
+        }
+
+        .step-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--accent-blue);
+            opacity: 0.5;
+            margin-bottom: -1rem;
+        }
+
+        /* --- Pilot Section --- */
+        .pilot-box {
+            background: var(--deep-forest);
+            color: white;
+            padding: 4rem;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .pilot-content h2 { color: white; }
+
+        .kangkong-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        /* --- Budget Visualization --- */
+        .budget-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 3rem;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        .chart-labels {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .budget-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--off-white);
+            border-radius: 12px;
+        }
+
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        /* --- Vision Section --- */
+        .vision-flex {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .vision-content { flex: 1; min-width: 300px; }
+        .vision-graphic { flex: 1; min-width: 300px; text-align: center; }
+
+        /* --- Contact Form --- */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--off-white);
+            padding: 3rem;
+            border-radius: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            background: var(--soft-beige);
+            font-family: inherit;
+        }
+
+        footer {
+            background: var(--deep-forest);
+            color: rgba(255,255,255,0.6);
+            padding: 40px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* --- Responsive Tweaks --- */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .pilot-box { flex-direction: column; padding: 2rem; text-align: center; }
+            .hero-title { font-size: 3rem; }
+            .budget-container { justify-content: center; }
+        }
+
+        /* --- Animations --- */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .float { animation: float 4s ease-in-out infinite; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>SibolAni Hydroponics</h1>
-    </div>
-    <div class="content">
-        <h2>Welcome to SibolAni</h2>
-        <p>We provide hydroponic systems to help Ilocos farming communities thrive.</p>
-        <h3>Benefits of Hydroponics</h3>
-        <ul>
-            <li>Water efficiency</li>
-            <li>Faster growth rates</li>
-            <li>No soil needed</li>
-        </ul>
-    </div>
-    <div class="footer">
-        <p>&copy; 2026 SibolAni</p>
-    </div>
+
+    <!-- STICKY NAVIGATION -->
+    <nav>
+        <div class="container nav-content">
+            <a href="#" class="logo">SibolAni</a>
+            <div class="nav-links">
+                <a href="#problem">Problem</a>
+                <a href="#solution">Solution</a>
+                <a href="#pilot">The Pilot</a>
+                <a href="#funding">Funding</a>
+                <a href="#vision">Vision</a>
+            </div>
+            <a href="#contact" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.8rem;">Join Us</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero visible">
+        <div class="container">
+            <p class="tagline">Local materials. Simple training. Resilient harvests.</p>
+            <h1 class="hero-title">SibolAni</h1>
+            <p class="hero-subtitle">Empowering Ilocos farming communities to thrive during the dry season through affordable, low-tech hydroponic innovation.</p>
+            <div class="btn-group">
+                <a href="#pilot" class="btn btn-primary">Explore the Pilot</a>
+                <a href="#problem" class="btn btn-secondary">Why It Matters</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- THE PROBLEM -->
+    <section id="problem" class="container">
+        <div class="section-header">
+            <h2>The Dry Season Challenge</h2>
+            <p>In Ilocos, the dry season brings stalled production and financial strain for small-scale farmers. Current alternatives often overlook the local reality.</p>
+        </div>
+        <div class="problem-grid">
+            <div class="card">
+                <div class="card-icon">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"></path></svg>
+                </div>
+                <h3>Water & Heat Stress</h3>
+                <p>Scarcity of water and intense heat during peak dry months make traditional soil farming labor-intensive and results unpredictable.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"></path><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"></path></svg>
+                </div>
+                <h3>Prohibitive Costs</h3>
+                <p>Commercial hydroponic systems are often too expensive for small farming communities, typically designed for industrial or urban use.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l9-5-9-5-9 5 9 5zm0 0l-9-5 9-5 9 5-9 5z"></path><path d="M12 14v7"></path></svg>
+                </div>
+                <h3>Knowledge Gap</h3>
+                <p>DIY solutions often struggle without specific nutrient guidance, accessible training, and consistent community-based follow-up support.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- THE SOLUTION -->
+    <section id="solution" style="background: var(--off-white);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Approach</h2>
+                <p>We provide a complete ecosystem: the hardware, the medium, and the knowledge.</p>
+            </div>
+            <div class="solution-flow">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <h3>No-Electricity Kit</h3>
+                    <p>Passive hydroponics using reused containers—built for reliability where power is scarce.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <h3>Local Medium</h3>
+                    <p>Using coco coir, an abundant local resource, as the primary sustainable growing medium.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <h3>Nutrient Solution</h3>
+                    <p>Affordable, precise concentrates optimized for leafy greens like kangkong.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">04</div>
+                    <h3>Training</h3>
+                    <p>Community-led workshops that ensure every kit leads to a successful harvest.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PILOT SECTION -->
+    <section id="pilot" class="container">
+        <div class="pilot-box">
+            <div class="pilot-content">
+                <span class="kangkong-badge">Phase One: Pilot</span>
+                <h2>The 7-Kit Prototype</h2>
+                <p style="margin-bottom: 1.5rem; opacity: 0.9;">We are launching our first pilot with a dedicated community group in Ilocos. By starting with 7 kits and a focus on <strong>kangkong</strong> (water spinach), we are testing the durability of our materials and the effectiveness of our training documentation.</p>
+                <ul style="list-style: none; display: flex; gap: 2rem; font-weight: 500; font-size: 0.9rem;">
+                    <li>✓ 7 Households</li>
+                    <li>✓ Focus: Kangkong</li>
+                    <li>✓ Ilocos Pilot Site</li>
+                </ul>
+            </div>
+            <div class="vision-graphic float">
+                <!-- Simple SVG representation of a Kangkong Leaf / Growth -->
+                <svg width="180" height="180" viewBox="0 0 100 100" fill="none">
+                    <circle cx="50" cy="50" r="48" stroke="white" stroke-opacity="0.2" stroke-width="1"/>
+                    <path d="M50 85C50 85 50 40 50 20M50 45C55 40 70 40 70 55C70 65 50 65 50 65M50 45C45 40 30 40 30 55C30 65 50 65 50 65" stroke="#A8C2D1" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- FUNDING / BUDGET -->
+    <section id="funding" class="container">
+        <div class="section-header">
+            <h2>Seed Funding Breakdown</h2>
+            <p>How we are utilizing our initial £350 to bridge the gap from idea to impact.</p>
+        </div>
+        <div class="budget-container">
+            <div class="chart-wrapper">
+                <svg viewBox="0 0 36 36" class="donut">
+                    <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#E6E6E6" stroke-width="3"></circle>
+                    <!-- Prototype: 180/350 = 51% -->
+                    <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#7D9D85" stroke-width="3" stroke-dasharray="51 49" stroke-dashoffset="25"></circle>
+                    <!-- Testing: 70/350 = 20% -->
+                    <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#3E5641" stroke-width="3" stroke-dasharray="20 80" stroke-dashoffset="74"></circle>
+                    <!-- Training: 50/350 = 14% -->
+                    <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#A8C2D1" stroke-width="3" stroke-dasharray="14 86" stroke-dashoffset="54"></circle>
+                    <!-- Pilot Prep: 50/350 = 15% -->
+                    <circle cx="18" cy="18" r="15.9" fill="transparent" stroke="#D1D1D1" stroke-width="3" stroke-dasharray="15 85" stroke-dashoffset="40"></circle>
+                </svg>
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                    <span style="display: block; font-size: 1.5rem; font-weight: bold; font-family: 'Playfair Display';">£350</span>
+                    <span style="font-size: 0.7rem; color: var(--text-light); text-transform: uppercase;">Total Seed</span>
+                </div>
+            </div>
+            <div class="chart-labels">
+                <div class="budget-item">
+                    <div class="color-dot" style="background: var(--sage-green);"></div>
+                    <div style="flex-grow:1;"><strong>Prototype Materials (Cardiff)</strong></div>
+                    <div>£180</div>
+                </div>
+                <div class="budget-item">
+                    <div class="color-dot" style="background: var(--deep-forest);"></div>
+                    <div style="flex-grow:1;"><strong>Testing & Documentation</strong></div>
+                    <div>£70</div>
+                </div>
+                <div class="budget-item">
+                    <div class="color-dot" style="background: var(--accent-blue);"></div>
+                    <div style="flex-grow:1;"><strong>Training Materials</strong></div>
+                    <div>£50</div>
+                </div>
+                <div class="budget-item">
+                    <div class="color-dot" style="background: #D1D1D1;"></div>
+                    <div style="flex-grow:1;"><strong>Pilot Prep w/ Partners</strong></div>
+                    <div>£50</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT THE VISION (Conceptual Bridge) -->
+    <section id="vision" style="background: var(--off-white);">
+        <div class="container vision-flex">
+            <div class="vision-graphic">
+                <svg width="240" height="120" viewBox="0 0 240 120" fill="none">
+                    <!-- Cardiff Cloud -->
+                    <path d="M20 60C20 50 30 45 40 45C45 35 55 35 60 40C65 30 85 30 90 45C100 45 110 55 110 65" stroke="#A8C2D1" stroke-width="2" stroke-dasharray="4 4"/>
+                    <!-- Ilocos Sun -->
+                    <circle cx="190" cy="50" r="15" stroke="#7D9D85" stroke-width="2"/>
+                    <path d="M190 25V30M190 70V75M165 50H170M210 50H215" stroke="#7D9D85" stroke-width="2"/>
+                    <!-- The Bridge Arc -->
+                    <path d="M70 70C100 40 140 40 170 70" stroke="#3E5641" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 10px;">The Bridge: Research to Reality</p>
+            </div>
+            <div class="vision-content">
+                <h2>Our Vision</h2>
+                <p>SibolAni was born from conversations about the real struggles of dry-season farming in the Philippines. We recognized that while the technology for hydroponics exists, the <strong>accessibility</strong> does not.</p>
+                <p style="margin-top: 1rem;">Our vision is to bridge global agricultural research with local, grassroots implementation. We aren't just building kits; we are building seasonal resilience for families who deserve a harvest all year round.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section id="contact" class="container">
+        <div class="section-header">
+            <h2>Join the Growth</h2>
+            <p>Whether you're an investor, a community partner, or a supporter, we'd love to share our progress.</p>
+        </div>
+        <div class="contact-form">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" placeholder="Your name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>How would you like to help?</label>
+                <textarea rows="4" placeholder="I'm interested in supporting the pilot..."></textarea>
+            </div>
+            <div class="btn-group" style="justify-content: flex-start;">
+                <button class="btn btn-primary" onclick="this.innerHTML='Thank you!'">Send Message</button>
+                <a href="#" class="btn btn-secondary">Get the Pitch Deck</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p style="color: white; margin-bottom: 10px;">SibolAni</p>
+            <p>&copy; 2024 Social Enterprise Project. Cardiff &bullet; Ilocos</p>
+        </div>
+    </footer>
+
     <script>
-        console.log('SibolAni website loaded');
+        // Simple Intersection Observer for section reveal animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Navigation background change on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.boxShadow = '0 10px 30px rgba(0,0,0,0.05)';
+            } else {
+                nav.style.boxShadow = 'none';
+            }
+        });
     </script>
 </body>
 </html>
